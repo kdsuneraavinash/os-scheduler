@@ -1,0 +1,20 @@
+{
+  "name": "os-scheduler-simulator",
+  "version": "1.0.0",
+  "description": "Simple webapp to simulate OS scheduling algorithms [Created for Operating Systems module project]",
+  "main": "index.html",
+  "repository": "https://www.github.com/kdsuneraavinash/os-scheduler-simulator",
+  "author": "K. D. Sunera Avinash Chandrasiri",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "bootstrap": "4.3.1",
+    "bootstrap-colorpicker": "^3.0.3",
+    "font-awesome": "^4.7.0",
+    "jquery": "1.9",
+    "pixi.js": "^5.0.0-rc.2",
+    "popper.js": "^1.14",
+    "tabulator-tables": "^4.2.3",
+    "webfont.js": "^1.0.2"
+  }
+}
