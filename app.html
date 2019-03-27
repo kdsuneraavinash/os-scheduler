@@ -59,7 +59,6 @@
                                    readonly>
                         </div>
 
-
                         <div class="row mt-4">
                             <div class="col">
                                 <button class="btn btn-primary" type="submit">Submit</button>
@@ -72,8 +71,12 @@
             </div>
         </div>
 
-        <div id="canvas-div">
-            <!-- <canvas id="canvas" width="800" height="600"></canvas> -->
+        <div id="vis-div">
+            <div id="canvas-div">
+                <!-- <canvas id="canvas" width="800" height="600"></canvas> -->
+            </div>
+        </div>
+        <div>
         </div>
     </div>
     <div class="col-lg-6 half-screen text-white p-3 m-0" style="background-color: #212529;">
@@ -120,7 +123,17 @@
 
 <script src="js/table.js"></script>
 <script src="js/validation.js"></script>
-<script src="js/process.js"></script>
+
+<script src="js/graphics/alias.js"></script>
+<script src="js/graphics/static-ref.js"></script>
+<script src="js/graphics/pixi-text.js"></script>
+<script src="js/graphics/draw.js"></script>
+
+<script src="js/logic/process.js"></script>
+<script src="js/logic/process-burst.js"></script>
+<script src="js/logic/scheduler.js"></script>
+
+<script src="js/vis.js"></script>
 <script src="js/app.js"></script>
 </body>
 

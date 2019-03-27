@@ -17,30 +17,39 @@ let canvasMode = false;
 $("#play").click(function () {
     let inputForm = $("#input-form");
     let buttonPlay = $("#play");
+    let buttonDelete = $("#delete-button");
+    let buttonClear = $("#clear-button");
     let buttonPlayIcon = $("#play-icon");
     let buttonPlayText = $("#play-text");
-    let canvas = $("#canvas-div");
+    let textSelectStats = $("#select-stats");
+    let vis = $("#vis-div");
 
     if (canvasMode) {
         // Viewing canvas - should show inpur form
-        canvas.fadeOut(200, "linear", function () {
-            canvas.hide();
+        vis.fadeOut(200, "linear", function () {
+            vis.hide();
             inputForm.fadeIn(200, function () {
                 inputForm.show();
                 drawingDispose();
             })
         });
         buttonPlayText.text("Play");
+        buttonDelete.show();
+        buttonClear.show();
+        textSelectStats.show();
     } else {
         // Viewing input form - should show canvas
         inputForm.fadeOut(200, "linear", function () {
             inputForm.hide();
-            canvas.fadeIn(200, function () {
-                canvas.show();
+            vis.fadeIn(200, function () {
+                vis.show();
                 drawingInit();
             })
         });
         buttonPlayText.text("Stop");
+        buttonDelete.hide();
+        buttonClear.hide();
+        textSelectStats.hide();
     }
     buttonPlay.toggleClass('btn-outline-danger');
     buttonPlay.toggleClass('btn-outline-success');
