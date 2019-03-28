@@ -2,7 +2,7 @@
 let tableData = [{
     id: 1,
     process_name: "Process A",
-    arrival_time: "1",
+    arrival_time: "0",
     burst_time: "6",
     color: "#c62828"
 },
@@ -16,22 +16,22 @@ let tableData = [{
     {
         id: 3,
         process_name: "Process C",
-        arrival_time: "2",
-        burst_time: "5",
+        arrival_time: "16",
+        burst_time: "8",
         color: "#2E7D32"
     },
     {
         id: 4,
         process_name: "Process D",
-        arrival_time: "12",
+        arrival_time: "13",
         burst_time: "6",
         color: "#E65100"
     },
     {
         id: 5,
         process_name: "Process E",
-        arrival_time: "16",
-        burst_time: "8",
+        arrival_time: "2",
+        burst_time: "5",
         color: "#FDD835"
     },
 ];
@@ -50,18 +50,24 @@ let table = new Tabulator("#table", {
         {
             title: "Arrival Time",
             field: "arrival_time",
-            align: "left"
+            align: "left",
+            editor:"number"
         },
         {
             title: "Burst Time",
             field: "burst_time",
-            align: "left"
+            align: "left",
+            editor:"number"
         },
         {
             title: "Color",
             field: "color",
-            formatter: "color",
-            width: 100
+            formatter:function(cell){
+                //cell - the cell component
+                return"<span class='rounded p-1' style='color: #fff; background-color: "+ cell.getValue() +";'>"+ cell.getValue() +"</span>";
+                // return "Mr" + cell.getValue(); //return the contents of the cell;
+            },
+            width: 120
         }
     ],
     rowSelectionChanged: function (data) {

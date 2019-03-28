@@ -5,6 +5,8 @@ Scheduler
  */
 
 class Scheduler {
+    static roundRobinIndex = 0;
+
     constructor(processes, strategy) {
         this.processes = processes;
         this.blockIndex = 0;
@@ -12,129 +14,174 @@ class Scheduler {
         this.currentProcess = null;
         this.processQueue = null;
         switch (strategy) {
-            case "FIFO":
-                this._strategy = this.firstComeFirstServe;
+            case "FCFS":
+                this._strategy = Scheduler.firstComeFirstServe;
+                this._process = this.nonPreemptive;
                 break;
             case "SJF":
-                this._strategy = this.shortestJobFirst;
+                this._strategy = Scheduler.shortestJobFirst;
+                this._process = this.nonPreemptive;
                 break;
             case "SRTF":
-                this._strategy = this.shortestRemainingTimeFirst;
+                this._strategy = Scheduler.shortestJobFirst;
+                this._process = this.preemptive;
+                break;
+            case "RR":
+                this._strategy = Scheduler.roundRobin;
+                this._process = this.preemptive;
                 break;
             default:
-                this._strategy  = this.firstComeFirstServe;
+                this._process = this.nonPreemptive;
+                this._strategy = Scheduler.firstComeFirstServe;
         }
+        console.log(this._strategy)
     }
 
     schedule() {
-        let v = this._strategy();
+        let v = this._process(this._strategy);
         this.time++;
         return v;
     }
 
-    firstComeFirstServe() {
-        if (this.processQueue == null) {
-            // initial run - sort by arrivalTime
-            this.processQueue = this.processes;
-            this.processQueue.sort(function (a, b) {
-                return a.arrivalTime - b.arrivalTime
-            });
-        }
+    nonPreemptive(selectNext) {
+        let schedulerMessage = $('#scheduler-message');
 
-        if (this.currentProcess == null) {
-            if (this.processQueue.length === 0) {
-                console.log("No Processes");
-                // No processes left
-                return false;
-            }
-            // Context Switching
-            // First process
-            console.log("Context Switching");
-            this.currentProcess = this.processQueue.shift();
-            return true;
-        }
-
-        let partAdded = this.currentProcess.addNewPart(this.blockIndex);
-        if (!partAdded) {
-            // Process has expired
-            this.currentProcess = null;
-            return this.firstComeFirstServe();
-        } else {
-            this.blockIndex++;
-        }
-        return true;
-    }
-
-    shortestRemainingTimeFirst() {
-        let firstTime = false;
         if (this.processQueue == null) {
             // initial run
-            firstTime = true;
             this.processQueue = this.processes;
-
         }
 
-        this.processQueue.sort(function (a, b) {
-            return a.remainingTime - b.remainingTime
-        });
-
-        console.log(this.processQueue);
-
-        if (this.currentProcess == null) {
-            if (!firstTime){
-                this.processQueue.shift();
-            }
-
-            if (this.processQueue.length === 0) {
-                console.log("No Processes");
-                // No processes left
-                return false;
+        if (this.currentProcess === null) {
+            // First Time
+            let v = selectNext(this);
+            if (v === 1) {
+                return 3
+            } else {
+                return v;
             }
         }
 
-        this.currentProcess = this.processQueue[0];
-
-        let partAdded = this.currentProcess.addNewPart(this.blockIndex);
-        if (!partAdded) {
-            // Process has expired
-            this.currentProcess = null;
-            return this.shortestRemainingTimeFirst();
-        } else {
-            this.blockIndex++;
+        if (this.currentProcess.remainingTime === 0 &&
+            this.processQueue.length === 0) {
+            schedulerMessage.text('No Processes Left');
+            return 0;
         }
-        return true;
+
+        if (this.currentProcess.remainingTime === 0) {
+            schedulerMessage.text('Waiting...');
+            return selectNext(this);
+        }
+
+        this.currentProcess.spendOneQuanta(this.blockIndex);
+        this.blockIndex++;
+        schedulerMessage.text('Scheduling...');
+        return 1; // return selectNext(this)
     }
 
-    shortestJobFirst() {
+    preemptive(selectNext) {
+        let schedulerMessage = $('#scheduler-message');
+
         if (this.processQueue == null) {
-            // initial run - sort by burst time
+            // initial run
             this.processQueue = this.processes;
-            this.processQueue.sort(function (a, b) {
-                return a.remainingTime - b.remainingTime
-            });
         }
 
-        if (this.currentProcess == null) {
-            if (this.processQueue.length === 0) {
-                console.log("No Processes");
-                // No processes left
-                return false;
+        if (this.currentProcess === null) {
+            // First Time
+            let v = selectNext(this);
+            if (v === 1) {
+                return 3
+            } else {
+                return v;
             }
-            // Context Switching
-            // First process
-            console.log("Context Switching");
-            this.currentProcess = this.processQueue.shift();
-            return true;
         }
 
-        let partAdded = this.currentProcess.addNewPart(this.blockIndex);
-        if (!partAdded) {
-            // Process has expired
-            this.currentProcess = null;
-            return this.shortestJobFirst();
-        } else {
-            this.blockIndex++;
+        let v = selectNext(this);
+        if (v === 0) {
+            schedulerMessage.text('No Processes Left');
+            return 0;
+        } else if (v === 1) {
+            schedulerMessage.text('Waiting...');
+            return 1;
         }
-        return true;
+        this.currentProcess.spendOneQuanta(this.blockIndex);
+        this.blockIndex++;
+        schedulerMessage.text('Scheduling...');
+        return 1;
+    }
+
+    static firstComeFirstServe(scheduler) {
+        scheduler.processQueue.sort(function (a, b) {
+            return a.arrivalTime - b.arrivalTime
+        });
+
+        for (let i = 0; i < scheduler.processQueue.length; i++) {
+            if (scheduler.processQueue[i].arrivalTime <= currentTime) {
+                if (scheduler.processQueue[i].remainingTime === 0) continue;
+                scheduler.currentProcess = scheduler.processQueue[i];
+                // scheduler.processQueue.splice(i, 1);
+                $('#scheduler-message').text('Context Switching');
+                return 2; // Available
+            }
+        }
+        return 1; // Not available
+    }
+
+    static shortestJobFirst(scheduler) {
+        scheduler.processQueue.sort(function (a, b) {
+            return a.burstTime - b.burstTime
+        });
+
+        let isAllExpired = true;
+        for (let i = 0; i < scheduler.processQueue.length; i++) {
+            if (scheduler.processQueue[i].remainingTime !== 0) {
+                isAllExpired = false;
+                break;
+            }
+        }
+        if (isAllExpired) {
+            return 0; // No Processes left
+        }
+
+        for (let i = 0; i < scheduler.processQueue.length; i++) {
+            if (scheduler.processQueue[i].arrivalTime <= currentTime) {
+                if (scheduler.processQueue[i].remainingTime === 0) continue;
+                scheduler.currentProcess = scheduler.processQueue[i];
+                // scheduler.processQueue.splice(i, 1);
+                $('#scheduler-message').text('Context Switching');
+                return 2; // Available
+            }
+        }
+        return 1; // Not available
+    }
+
+    static roundRobin(scheduler) {
+        scheduler.processQueue.sort(function (a, b) {
+            return ('' + a.processName).localeCompare(b.processName);
+        });
+
+        let isAllExpired = true;
+        for (let i = 0; i < scheduler.processQueue.length; i++) {
+            if (scheduler.processQueue[i].remainingTime !== 0) {
+                isAllExpired = false;
+                break;
+            }
+        }
+        if (isAllExpired) {
+            return 0; // No Processes left
+        }
+
+        for (let i = 1; i <= scheduler.processQueue.length; i++) {
+            let j = (i + Scheduler.roundRobinIndex) % scheduler.processQueue.length;
+
+            if (scheduler.processQueue[j].arrivalTime <= currentTime) {
+                if (scheduler.processQueue[j].remainingTime === 0) continue;
+                scheduler.currentProcess = scheduler.processQueue[j];
+                $('#scheduler-message').text('Context Switching');
+                Scheduler.roundRobinIndex = j;
+                return 2; // Available
+            }
+        }
+        return 1; // Not available
     }
 }

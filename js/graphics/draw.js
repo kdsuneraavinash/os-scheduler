@@ -14,7 +14,7 @@ function drawRectangle(options) {
     let lineWidth = valueWithDefault(options['lineWidth'], 1);
     let lineAlpha = valueWithDefault(options['lineAlpha'], 1);
 
-    let rectangle = new PIXIGraphics();
+    let rectangle = new PIXI.Graphics();
     rectangle.lineStyle(lineWidth, lineColor, lineAlpha);
     rectangle.beginFill(fillColor);
     rectangle.drawRect(xPos, yPos, width, height);

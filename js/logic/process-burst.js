@@ -1,58 +1,73 @@
 class ProcessBurst {
-    constructor(index, color) {
-        let maxXInd = PIXIStaticReference.maximumXIndex();
+    static activeMouseHover = '';
 
-        this.index = index;
-        let i = Math.floor(index / maxXInd);
-        let j = this.index % maxXInd;
-        this.left = j * BLOCK_SIZE + PADDING;
-        this.top = i * BLOCK_SIZE + PADDING;
+    constructor(color, burstIndex, parent) {
+        this.color = color;
+        this.burstIndex = burstIndex;
+        this.parentProcess = parent;
+
         this.width = BLOCK_SIZE;
         this.height = BLOCK_SIZE;
-        this.color = color;
+
+        let maxXInd = Math.floor(PIXIApp.app.view.width / BLOCK_SIZE) - 1;
+        this.time = currentTime;
+
+        let i = Math.floor(this.time / maxXInd);
+        let j = this.time % maxXInd;
+        this.left = j * BLOCK_SIZE + PADDING;
+        this.top = i * BLOCK_SIZE + PADDING;
+
         this._rect = null;
-        this.selected = false;
+    }
+
+    _createRect(){
+        let rect = drawRectangle({
+            xPos: this.left,
+            yPos: this.top,
+            width: this.width,
+            height: this.height,
+            fillColor: this.color
+        });
+        rect.width = 1;
+
+        rect.interactive = true;
+        let mouseText = 'Burst ' + (this.burstIndex + 1) + ' of ' + this.parentProcess.processName;
+        mouseText += "<br/>Burst happened at t = "+ this.time;
+        let mouseTextLabel = $('#mouse-text');
+
+        // noinspection JSUndefinedPropertyAssignment
+        rect.mouseover = () => {
+            mouseTextLabel.html(mouseText);
+            ProcessBurst.activeMouseHover = this.burstIndex + ':' + this.parentProcess.processName;
+            ProcessBurst.activeMouseHover = mouseText;
+            rect.alpha = 0.5;
+        };
+        // noinspection JSUndefinedPropertyAssignment
+        rect.mouseout = () => {
+            if (ProcessBurst.activeMouseHover === mouseText){
+                mouseTextLabel.html('[Hover mouse over a burst block to see details]');
+                ProcessBurst.activeMouseHover = '';
+            }
+            rect.alpha = 1;
+        };
+
+        this._rect = rect;
     }
 
     get rect() {
         if (this._rect == null) {
-            this._rect = drawRectangle({
-                xPos: this.left,
-                yPos: this.top,
-                width: this.width,
-                height: this.height,
-                fillColor: this.color
-            });
-            this._rect.width = 1;
-
-            this._rect.interactive = true;
-
-            this._rect.mouseover = () => {
-                this.selected = true;
-                this._rect.alpha = 0.5;
-            };
-            this._rect.mouseout = () => {
-                this.selected = false;
-                this._rect.alpha = 1;
-            }
-
+            this._createRect();
         }
         return this._rect;
     }
 
-    addToCanvas() {
-        let app = PIXIStaticReference.app;
+    drawOnStage() {
+        let app = PIXIApp.app;
         app.stage.addChild(this.rect);
-
-        PIXIStaticReference.setAppLoop(
-            // Animation Loop
+        app.ticker.add(// Animation Loop
             (delta) => {
+                if (this.rect.width >= this.width) return;
                 this.rect.width += BLOCK_FILL_SPEED * delta;
-                if (this.rect.width >= this.width) {
-                    // Disable Animation
-                    PIXIStaticReference.setAppLoop(null);
-                }
-            }
-        );
+            });
     }
 }

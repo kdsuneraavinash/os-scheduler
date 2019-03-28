@@ -1,20 +1,21 @@
 class Process {
     constructor(id, processName, arrivalTime, burstTime, color) {
-        this.bursts = [];
-        // this.id = id;
+        this.id = id;
         this.processName = processName;
         this.arrivalTime = arrivalTime;
-        // this.burstTime = burstTime;
+        this.burstTime = burstTime; // Total
         this.color = color;
+
+        this.bursts = [];
         this.remainingTime = burstTime;
     }
 
-    addNewPart(time) {
+    spendOneQuanta(){
         if (this.remainingTime === 0) {
             return false;
         }
-        let g = new ProcessBurst(time, this.color);
-        g.addToCanvas();
+        let g = new ProcessBurst(this.color, this.bursts.length, this);
+        g.drawOnStage();
         this.bursts.push(g);
         this.remainingTime--;
         return true;
@@ -23,9 +24,12 @@ class Process {
     static fromJSON(json) {
         let color = json['color'];
         color = "0x" + color.substr(1);
-        return new Process(json['id'], json['process_name'],
+        return new Process(
+            json['id'],
+            json['process_name'],
             json['arrival_time'],
-            json['burst_time'], color)
+            json['burst_time'],
+            color)
     }
 }
 

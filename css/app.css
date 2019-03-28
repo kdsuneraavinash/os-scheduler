@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css?family=Indie+Flower');
+
 * {
-    overflow-x: hidden !important;
+    font-family: 'Indie Flower', sans-serif;
 }
 
 /*
@@ -10,6 +12,7 @@ Table Colors
 
 .tabulator-table {
     color: #fff !important;
+    font-size: 1.1em;
 }
 
 .tabulator-selected {
@@ -33,9 +36,8 @@ Table Colors
 }
 
 #vis-div{
-    height: 100vh;
+    background-color: #061639;
     position: relative;
-    background-color: rgb(0, 0, 0);
     display: none;
     padding-left: 0;
     padding-right: 0;
@@ -51,6 +53,14 @@ Table Colors
     overflow: hidden;
 }
 
+#stat-div {
+    border-top: 2px dashed white;
+    height: 50vh;
+    padding: 10px;
+    font-size: 30px;
+    color: white;
+    overflow: hidden;
+}
 
 /*
 -----------------------------------------------
