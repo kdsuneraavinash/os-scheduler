@@ -13,7 +13,6 @@ function drawingInit() {
     app.renderer.backgroundColor = 0x061639;
 
     let processes = createProcessArrayFromData();
-    console.log($('#algorithm').val())
     let scheduler = new Scheduler(processes, $('#algorithm').val());
     // noinspection JSIgnoredPromiseFromCall
     draw(scheduler);
@@ -25,12 +24,23 @@ async function draw(scheduler){
         await timeout(TIME_DELAY);
         if (!v) break;
     }
-}
 
-function drawingDispose() {
-    PIXIApp.destroyAll();
-    $("#canvas-div").empty();
-    isNotRunning = true;
+    let data = [];
+    for (let i = 0; i < scheduler.processes.length; i++) {
+        let process = scheduler.processes[i];
+        for (let j = 0; j < process.bursts.length; j++) {
+            let burst = process.bursts[j];
+            let datum = {
+                name: process.processName,
+                start: (burst.time) + '',
+                end: (burst.time + 1) + '',
+                color: process.color.replace('0x', '#')
+            };
+            data.push(datum);
+        }
+    }
+    initChart(data);
+    $("#chart-button").prop('disabled', false);
 }
 
 function loop(scheduler)  {

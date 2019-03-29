@@ -9,9 +9,7 @@ $(document).ready(function () {
     color.on('colorpickerChange', function (event) {
         color.css('background-color', event.color.toString());
     });
-    $('select').niceSelect();
 });
-
 
 // Play/Stop Button Click
 $("#play").click(function () {
@@ -27,7 +25,6 @@ $("#play").click(function () {
         inputForm.hide();
         vis.fadeIn(200, function () {
             vis.show();
-            createProgressBars();
             drawingInit();
         })
     });
@@ -42,13 +39,3 @@ $("#play").click(function () {
 $("#close-overlay").click(function () {
     $("#mobile-block").hide();
 });
-
-function createProgressBars() {
-    let orig = $("#progress-origin");
-    let data = table.getData();
-
-    for (let i = 0; i < data.length; i++) {
-
-    }
-    console.log()
-}

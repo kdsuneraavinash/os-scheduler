@@ -370,13 +370,6 @@ ismobilejs@^0.5.1:
   resolved "https://registry.yarnpkg.com/ismobilejs/-/ismobilejs-0.5.1.tgz#0e3f825e29e32f84ad5ddbb60e9e04a894046488"
   integrity sha512-QX4STsOcBYqlTjVGuAdP1MiRVxtiUbRHOKH0v7Gn1EvfUVIQnrSdgCM4zB4VCZuIejnb2NUMUx0Bwd3EIG6yyA==
 
-jquery-nice-select@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/jquery-nice-select/-/jquery-nice-select-1.1.0.tgz#9cd590fead56afe6bccd41294293fba356189c7d"
-  integrity sha1-nNWQ/q1Wr+a8zUEpQpP7o1YYnH0=
-  dependencies:
-    jquery "^2.2.3"
-
 jquery@1.9:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-1.9.1.tgz#e4cd4835faaefbade535857613c0fc3ff2adaf34"
@@ -386,11 +379,6 @@ jquery@>=2.1.0:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
   integrity sha512-Ubldcmxp5np52/ENotGxlLe6aGMvmF4R8S6tZjsP6Knsaxd/xp3Zrh50cG93lR6nPXyUFwzN3ZSOQI0wRJNdGg==
-
-jquery@^2.2.3:
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-2.2.4.tgz#2c89d6889b5eac522a7eea32c14521559c6cbf02"
-  integrity sha1-LInWiJterFIqfuoywUUhVZxsvwI=
 
 mini-runner@^1.0.1:
   version "1.0.1"

@@ -1,6 +1,5 @@
 class Process {
     constructor(id, processName, arrivalTime, burstTime, color) {
-        this.id = id;
         this.processName = processName;
         this.arrivalTime = arrivalTime;
         this.burstTime = burstTime; // Total

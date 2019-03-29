@@ -8,12 +8,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/sketchy.bootstrap.min.css">
     <link rel="stylesheet" href="node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css">
     <link rel="stylesheet" href="node_modules/tabulator-tables/dist/css/tabulator.min.css">
     <link rel="stylesheet" href="node_modules/tabulator-tables/dist/css/bootstrap/tabulator_bootstrap4.min.css">
     <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="node_modules/jquery-nice-select/css/nice-select.css">
     <link rel="stylesheet" type="text/css" media="screen" href="css/app.css">
 </head>
 
@@ -54,8 +53,8 @@
                                    autocomplete="off">
                         </div>
                         <div class="form-group row px-2">
-                            <input type="text" class="form-control" id="color" placeholder="Color"
-                                   value="rgb(255, 255, 255)"
+                            <input type="text" class="form-control text-white" id="color" placeholder="Color"
+                                   value="rgb(0, 0, 0)" style="background-color: #000"
                                    readonly>
                         </div>
 
@@ -83,7 +82,7 @@
                 <div class="progress mt-2" style="height: 40px;">
                     <div id="current-process-progress" class="progress-bar progress-bar-striped progress-bar-animated"
                          role="progressbar" aria-valuenow="0" aria-valuemin="0"
-                         aria-valuemax="100" style="width: 0%; font-size: 20px;">
+                         aria-valuemax="100" style="width: 0; font-size: 20px;">
                         No Bursts
                     </div>
                 </div>
@@ -115,12 +114,16 @@
                 <p class="py-2" id="select-stats"></p>
             </div>
 
-            <select class="col-4 text-center text-dark" id="algorithm">
-                <option value="FCFS">First Come First Serve</option>
-                <option value="SJF">Smallest Job First</option>
-                <option value="SRTF">Smallest Remaining Time First</option>
-                <option value="RR">Round Robin</option>
-            </select>
+            <div class="form-group col-4 text-center text-dark">
+                <!--suppress HtmlFormInputWithoutLabel -->
+                <select class="custom-select" id="algorithm">
+                    <option value="FCFS">First Come First Serve</option>
+                    <option value="SJF">Shortest Job First</option>
+                    <option value="SRTF">Shortest Remaining Time First</option>
+                    <option value="RR">Round Robin</option>
+                </select>
+            </div>
+
             <div class="col-4 text-right">
                 <button type="button" id="clear-button" class="btn btn-outline-danger">
                     <i class="fa fa-trash" aria-hidden="true"></i>&nbsp;Clear
@@ -133,10 +136,36 @@
             <button type="button" id="play" class="btn btn-lg btn-outline-success mx-3">
                 <i id="play-icon" class="fa fa-play" aria-hidden="true"></i>&nbsp; <span
                     id="play-text">Play</span></button>
-            <button type="button" id="reload" class="btn btn-outline-warning" onclick="window.location.reload(false);">
+            <button type="button" id="reload" class="btn btn-outline-warning mx-3" onclick="window.location.reload(false);">
                 <i class="fa fa-refresh" aria-hidden="true"></i>&nbsp;
                 Refresh
             </button>
+            <button id="chart-button" type="button" class="btn btn-outline-light mx-3" data-toggle="modal"
+                    data-target=".bd-example-modal-lg" disabled>
+                <i class="fa fa-bar-chart-o" aria-hidden="true"></i>&nbsp;
+                Gantt Chart
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><strong>Gantt Chart</strong></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="chartdiv" style="width: 90%; height: 400px;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>
@@ -149,10 +178,14 @@
 <script src="node_modules/tabulator-tables/dist/js/tabulator.min.js"></script>
 <script src="node_modules/webfont.js/dist/webfont.min.js"></script>
 <script src="node_modules/pixi.js/dist/pixi.min.js"></script>
-<script src="node_modules/jquery-nice-select/js/jquery.nice-select.min.js"></script>
+
+<script src="https://www.amcharts.com/lib/4/core.js"></script>
+<script src="https://www.amcharts.com/lib/4/charts.js"></script>
+<script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
 
 <script src="js/table.js"></script>
 <script src="js/validation.js"></script>
+<script src="js/chart.js"></script>
 
 <script src="js/graphics/alias.js"></script>
 <script src="js/graphics/pixi-app.js"></script>

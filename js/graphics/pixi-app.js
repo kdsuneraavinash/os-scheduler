@@ -22,8 +22,4 @@ class PIXIApp {
         }
         return PIXIApp._app;
     }
-
-    static destroyAll() {
-        PIXIApp._app = null;
-    }
 }

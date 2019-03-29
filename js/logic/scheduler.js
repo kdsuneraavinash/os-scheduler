@@ -37,6 +37,17 @@ class Scheduler {
         console.log(this._strategy)
     }
 
+    static isAllProcessesExpired(scheduler){
+        let isAllExpired = true;
+        for (let i = 0; i < scheduler.processQueue.length; i++) {
+            if (scheduler.processQueue[i].remainingTime !== 0) {
+                isAllExpired = false;
+                break;
+            }
+        }
+        return isAllExpired;
+    }
+
     schedule() {
         let v = this._process(this._strategy);
         this.time++;
@@ -61,15 +72,14 @@ class Scheduler {
             }
         }
 
-        if (this.currentProcess.remainingTime === 0 &&
-            this.processQueue.length === 0) {
-            schedulerMessage.text('No Processes Left');
-            return 0;
-        }
-
         if (this.currentProcess.remainingTime === 0) {
             schedulerMessage.text('Waiting...');
-            return selectNext(this);
+            let v = selectNext(this);
+            if (v === 0) {
+                schedulerMessage.text('No Processes Left');
+                return 0;
+            }
+            return v;
         }
 
         this.currentProcess.spendOneQuanta(this.blockIndex);
@@ -110,10 +120,16 @@ class Scheduler {
         return 1;
     }
 
+    // LOGIC IMPLEMENTATIONS =======================================
+
     static firstComeFirstServe(scheduler) {
         scheduler.processQueue.sort(function (a, b) {
             return a.arrivalTime - b.arrivalTime
         });
+
+        if(Scheduler.isAllProcessesExpired(scheduler)){
+            return 0;
+        }
 
         for (let i = 0; i < scheduler.processQueue.length; i++) {
             if (scheduler.processQueue[i].arrivalTime <= currentTime) {
@@ -129,18 +145,11 @@ class Scheduler {
 
     static shortestJobFirst(scheduler) {
         scheduler.processQueue.sort(function (a, b) {
-            return a.burstTime - b.burstTime
+            return a.remainingTime - b.remainingTime
         });
 
-        let isAllExpired = true;
-        for (let i = 0; i < scheduler.processQueue.length; i++) {
-            if (scheduler.processQueue[i].remainingTime !== 0) {
-                isAllExpired = false;
-                break;
-            }
-        }
-        if (isAllExpired) {
-            return 0; // No Processes left
+        if(Scheduler.isAllProcessesExpired(scheduler)){
+            return 0;
         }
 
         for (let i = 0; i < scheduler.processQueue.length; i++) {
@@ -160,15 +169,8 @@ class Scheduler {
             return ('' + a.processName).localeCompare(b.processName);
         });
 
-        let isAllExpired = true;
-        for (let i = 0; i < scheduler.processQueue.length; i++) {
-            if (scheduler.processQueue[i].remainingTime !== 0) {
-                isAllExpired = false;
-                break;
-            }
-        }
-        if (isAllExpired) {
-            return 0; // No Processes left
+        if(Scheduler.isAllProcessesExpired(scheduler)){
+            return 0;
         }
 
         for (let i = 1; i <= scheduler.processQueue.length; i++) {
