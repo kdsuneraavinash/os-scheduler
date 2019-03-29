@@ -14,7 +14,6 @@
     "jquery": "1.9",
     "pixi.js": "^5.0.0-rc.2",
     "popper.js": "^1.14",
-    "tabulator-tables": "^4.2.3",
-    "webfont.js": "^1.0.2"
+    "tabulator-tables": "^4.2.3"
   }
 }
