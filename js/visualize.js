@@ -40,7 +40,7 @@ async function draw(scheduler){
         }
     }
     initChart(data);
-    $("#chart-button").prop('disabled', false);
+    $("#chart-button").show();
 }
 
 function loop(scheduler)  {
