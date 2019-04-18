@@ -28,7 +28,7 @@ class ProcessBurst {
             height: this.height,
             fillColor: this.color
         });
-        rect.width = 1;
+        // rect.width = 1;
 
         rect.interactive = true;
         let mouseText = 'Burst ' + (this.burstIndex + 1) + ' of ' + this.parentProcess.processName;
@@ -63,11 +63,15 @@ class ProcessBurst {
 
     drawOnStage() {
         let app = PIXIApp.app;
+        this.rect.alpha = 0;
         app.stage.addChild(this.rect);
-        app.ticker.add(// Animation Loop
-            (delta) => {
-                if (this.rect.width >= this.width) return;
-                this.rect.width += BLOCK_FILL_SPEED * delta;
-            });
+        let animation = (delta) => {
+            if (this.rect.alpha >= 1) return;
+            this.rect.alpha += (ALPHA_FILL_RATE * delta);
+        }
+        app.ticker.add(animation);
+        setTimeout(() => {
+            app.ticker.remove(animation);
+        }, TIME_DELAY);
     }
 }

@@ -4,186 +4,207 @@ Scheduler
 -----------------------------------------------
  */
 
+let NO_PROCESS_SCHEDULED = 1;
+let SAME_PROCESS_SCHEDULED = 2;
+let NO_PROCESSES_LEFT = 0;
+
 class Scheduler {
     static roundRobinIndex = 0;
 
     constructor(processes, strategy) {
         this.processes = processes;
         this.blockIndex = 0;
-        this.time = -1;
         this.currentProcess = null;
-        this.processQueue = null;
+        this.schedulingQueue = [];
         switch (strategy) {
             case "FCFS":
-                this._strategy = Scheduler.firstComeFirstServe;
-                this._process = this.nonPreemptive;
+                this._strategy = this.firstComeFirstServe;
                 break;
             case "SJF":
-                this._strategy = Scheduler.shortestJobFirst;
-                this._process = this.nonPreemptive;
+                this._strategy = this.shortestJobFirst;
                 break;
             case "SRTF":
-                this._strategy = Scheduler.shortestJobFirst;
-                this._process = this.preemptive;
+                this._strategy = this.shortestRemainingTimeFirst;
                 break;
             case "RR":
-                this._strategy = Scheduler.roundRobin;
-                this._process = this.preemptive;
+                this._strategy = this.roundRobin;
                 break;
             default:
-                this._process = this.nonPreemptive;
-                this._strategy = Scheduler.firstComeFirstServe;
+                this._strategy = this.firstComeFirstServe;
         }
-        console.log(this._strategy)
-    }
-
-    static isAllProcessesExpired(scheduler){
-        let isAllExpired = true;
-        for (let i = 0; i < scheduler.processQueue.length; i++) {
-            if (scheduler.processQueue[i].remainingTime !== 0) {
-                isAllExpired = false;
-                break;
-            }
-        }
-        return isAllExpired;
     }
 
     schedule() {
-        let v = this._process(this._strategy);
-        this.time++;
+        let v = NO_PROCESS_SCHEDULED;
+        if (currentTime === -1) {
+            this.initialize();
+        } else {
+            v = this._strategy();
+        }
+        if (v !== NO_PROCESSES_LEFT) {
+            currentTime++;
+        }
+
         return v;
     }
 
-    nonPreemptive(selectNext) {
-        let schedulerMessage = $('#scheduler-message');
+    // ============================================================
 
-        if (this.processQueue == null) {
-            // initial run
-            this.processQueue = this.processes;
-        }
-
-        if (this.currentProcess === null) {
-            // First Time
-            let v = selectNext(this);
-            if (v === 1) {
-                return 3
-            } else {
-                return v;
+    initialize() {
+        for (let i = 0; i < this.processes.length; i++) {
+            if (this.processes[i].burstTime === 0) {
+                // If burst time is zero at start - remove them entirely
+                this.processes.splice(i, 1);
             }
         }
+    }
 
-        if (this.currentProcess.remainingTime === 0) {
-            schedulerMessage.text('Waiting...');
-            let v = selectNext(this);
-            if (v === 0) {
-                schedulerMessage.text('No Processes Left');
-                return 0;
+    endScheduling(){
+        let data = []
+        this.processes.forEach(element => {
+            element.computeEnd();
+            let datum = {
+                'process': element.processName,
+                'time': element.getWaitingTime(),
+                'color': element.color.replace('0x', '#')
             }
-            return v;
+            data.push(datum);
+        });
+        initWaitingTime(data);
+    }
+
+    static areProcessesExpired(scheduler) {
+        let areAllExpired = true;
+        for (let i = 0; i < scheduler.processes.length; i++) {
+            if (scheduler.processes[i].remainingTime !== 0) {
+                areAllExpired = false;
+                break;
+            }
+        }
+        return areAllExpired;
+    }
+
+    addNewArrivals() {
+        // Handle New Arrivals
+        for (let i = 0; i < this.processes.length; i++) {
+            if (this.processes[i].arrivalTime === currentTime) {
+                // If arrival time is this time - add to list
+                this.schedulingQueue.push(this.processes[i]);
+            }
+        }
+    }
+
+    removeZeroRemainingTimeProcesses() {
+        // Remove 0 remaining time processes
+        for (let i = 0; i < this.schedulingQueue.length; i++) {
+            if (this.schedulingQueue[i].remainingTime === 0) {
+                // If burst time is zero at start - remove them entirely
+                this.schedulingQueue.splice(i, 1);
+            }
+        }
+    }
+
+    firstComeFirstServe() {
+        if (Scheduler.areProcessesExpired(this)) {
+            this.endScheduling();
+            return NO_PROCESSES_LEFT;
+        }
+
+        this.addNewArrivals();
+        this.removeZeroRemainingTimeProcesses();
+
+        if (this.schedulingQueue.length === 0) {
+            return NO_PROCESS_SCHEDULED;
+        } else {
+            this.currentProcess = this.schedulingQueue[0];
+            this.currentProcess.spendOneQuanta(this.blockIndex);
+            this.blockIndex++;
+
+            return SAME_PROCESS_SCHEDULED;
+        }
+    }
+
+    shortestJobFirst() {
+        if (Scheduler.areProcessesExpired(this)) {
+            this.endScheduling();
+            return NO_PROCESSES_LEFT;
+        }
+
+        this.addNewArrivals();
+        this.removeZeroRemainingTimeProcesses();
+
+        if (this.schedulingQueue.length === 0) {
+            return NO_PROCESS_SCHEDULED;
+        } else if (this.currentProcess === null ||
+            this.currentProcess.remainingTime === 0) {
+
+            // Select New one
+            let shortestJobTime = this.schedulingQueue[0].remainingTime;
+            let shortestJobI = 0;
+            for (let i = 0; i < this.schedulingQueue.length; i++) {
+                if (this.schedulingQueue[i].remainingTime < shortestJobTime) {
+                    shortestJobTime = this.schedulingQueue[i].remainingTime;
+                    shortestJobI = i;
+                }
+            }
+            this.currentProcess = this.schedulingQueue[shortestJobI];
         }
 
         this.currentProcess.spendOneQuanta(this.blockIndex);
         this.blockIndex++;
-        schedulerMessage.text('Scheduling...');
-        return 1; // return selectNext(this)
+        return SAME_PROCESS_SCHEDULED;
     }
 
-    preemptive(selectNext) {
-        let schedulerMessage = $('#scheduler-message');
-
-        if (this.processQueue == null) {
-            // initial run
-            this.processQueue = this.processes;
+    shortestRemainingTimeFirst() {
+        if (Scheduler.areProcessesExpired(this)) {
+            this.endScheduling();
+            return NO_PROCESSES_LEFT;
         }
 
-        if (this.currentProcess === null) {
-            // First Time
-            let v = selectNext(this);
-            if (v === 1) {
-                return 3
-            } else {
-                return v;
+        this.addNewArrivals();
+        this.removeZeroRemainingTimeProcesses();
+
+        if (this.schedulingQueue.length === 0) {
+            return NO_PROCESS_SCHEDULED;
+        } else {
+            // Select New one
+            let shortestJobTime = this.schedulingQueue[0].remainingTime;
+            let shortestJobI = 0;
+            for (let i = 0; i < this.schedulingQueue.length; i++) {
+                if (this.schedulingQueue[i].remainingTime < shortestJobTime) {
+                    shortestJobTime = this.schedulingQueue[i].remainingTime;
+                    shortestJobI = i;
+                }
             }
-        }
+            this.currentProcess = this.schedulingQueue[shortestJobI];
 
-        let v = selectNext(this);
-        if (v === 0) {
-            schedulerMessage.text('No Processes Left');
-            return 0;
-        } else if (v === 1) {
-            schedulerMessage.text('Waiting...');
-            return 1;
+            this.currentProcess.spendOneQuanta(this.blockIndex);
+            this.blockIndex++;
+
+            return SAME_PROCESS_SCHEDULED;
         }
-        this.currentProcess.spendOneQuanta(this.blockIndex);
-        this.blockIndex++;
-        schedulerMessage.text('Scheduling...');
-        return 1;
     }
 
-    // LOGIC IMPLEMENTATIONS =======================================
 
-    static firstComeFirstServe(scheduler) {
-        scheduler.processQueue.sort(function (a, b) {
-            return a.arrivalTime - b.arrivalTime
-        });
-
-        if(Scheduler.isAllProcessesExpired(scheduler)){
-            return 0;
+    roundRobin() {
+        if (Scheduler.areProcessesExpired(this)) {
+            this.endScheduling();
+            return NO_PROCESSES_LEFT;
         }
 
-        for (let i = 0; i < scheduler.processQueue.length; i++) {
-            if (scheduler.processQueue[i].arrivalTime <= currentTime) {
-                if (scheduler.processQueue[i].remainingTime === 0) continue;
-                scheduler.currentProcess = scheduler.processQueue[i];
-                // scheduler.processQueue.splice(i, 1);
-                $('#scheduler-message').text('Context Switching');
-                return 2; // Available
-            }
+        this.addNewArrivals();
+        this.removeZeroRemainingTimeProcesses();
+
+        if (this.schedulingQueue.length === 0) {
+            return NO_PROCESS_SCHEDULED;
+        } else {
+            Scheduler.roundRobinIndex = Scheduler.roundRobinIndex%this.schedulingQueue.length;
+            this.currentProcess = this.schedulingQueue[Scheduler.roundRobinIndex];
+            Scheduler.roundRobinIndex++;
+
+            this.currentProcess.spendOneQuanta(this.blockIndex);
+            this.blockIndex++;
+            return SAME_PROCESS_SCHEDULED;
         }
-        return 1; // Not available
-    }
-
-    static shortestJobFirst(scheduler) {
-        scheduler.processQueue.sort(function (a, b) {
-            return a.remainingTime - b.remainingTime
-        });
-
-        if(Scheduler.isAllProcessesExpired(scheduler)){
-            return 0;
-        }
-
-        for (let i = 0; i < scheduler.processQueue.length; i++) {
-            if (scheduler.processQueue[i].arrivalTime <= currentTime) {
-                if (scheduler.processQueue[i].remainingTime === 0) continue;
-                scheduler.currentProcess = scheduler.processQueue[i];
-                // scheduler.processQueue.splice(i, 1);
-                $('#scheduler-message').text('Context Switching');
-                return 2; // Available
-            }
-        }
-        return 1; // Not available
-    }
-
-    static roundRobin(scheduler) {
-        scheduler.processQueue.sort(function (a, b) {
-            return ('' + a.processName).localeCompare(b.processName);
-        });
-
-        if(Scheduler.isAllProcessesExpired(scheduler)){
-            return 0;
-        }
-
-        for (let i = 1; i <= scheduler.processQueue.length; i++) {
-            let j = (i + Scheduler.roundRobinIndex) % scheduler.processQueue.length;
-
-            if (scheduler.processQueue[j].arrivalTime <= currentTime) {
-                if (scheduler.processQueue[j].remainingTime === 0) continue;
-                scheduler.currentProcess = scheduler.processQueue[j];
-                $('#scheduler-message').text('Context Switching');
-                Scheduler.roundRobinIndex = j;
-                return 2; // Available
-            }
-        }
-        return 1; // Not available
     }
 }

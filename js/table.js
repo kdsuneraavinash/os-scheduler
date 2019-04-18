@@ -1,11 +1,11 @@
 //define some initial data
 let tableData = [{
-    id: 1,
-    process_name: "Process A",
-    arrival_time: "0",
-    burst_time: "6",
-    color: "#c62828"
-},
+        id: 1,
+        process_name: "Process A",
+        arrival_time: "0",
+        burst_time: "6",
+        color: "#c62828"
+    },
     {
         id: 2,
         process_name: "Process B",
@@ -44,27 +44,25 @@ let table = new Tabulator("#table", {
     selectable: true, //make rows selectable
     //Define Table Columns
     columns: [{
-        title: "Name",
-        field: "process_name"
-    },
+            title: "Name",
+            field: "process_name"
+        },
         {
             title: "Arrival Time",
             field: "arrival_time",
             align: "left",
-            editor:"number"
         },
         {
             title: "Burst Time",
             field: "burst_time",
             align: "left",
-            editor:"number"
         },
         {
             title: "Color",
             field: "color",
-            formatter:function(cell){
+            formatter: function (cell) {
                 //cell - the cell component
-                return"<span class='rounded p-1' style='color: #fff; background-color: "+ cell.getValue() +";'>"+ cell.getValue() +"</span>";
+                return "<span class='rounded p-1' style='color: #fff; background-color: " + cell.getValue() + ";'>" + cell.getValue() + "</span>";
                 // return "Mr" + cell.getValue(); //return the contents of the cell;
             },
             width: 120
@@ -95,4 +93,3 @@ $("#delete-button").click(function () {
     }
     $("#select-stats").text("No Processes selected.");
 });
-

@@ -1,7 +1,7 @@
 const BLOCK_SIZE = 50;
 const PADDING = 10;
-const BLOCK_FILL_SPEED = 4;
-const TIME_DELAY = 1500;
+const ALPHA_FILL_RATE = 0.1;
+const TIME_DELAY = 750;
 
 function valueWithDefault(value, defaultValue) {
     return (value === undefined) ? defaultValue : value;

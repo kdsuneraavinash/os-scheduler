@@ -92,11 +92,16 @@
                     <div class="text-center mb-3" style="font-size: 20px" id="scheduler-message">
                         Initializing
                     </div>
-                    <div class="text-center">
-                        <button id="chart-button" type="button" class="btn btn-outline-light mx-3"
-                            data-toggle="modal" data-target=".bd-example-modal-lg" style="display: none;">
+                    <div class="text-center" style="display: none;"  id="chart-button">
+                        <button type="button" class="btn btn-outline-light mx-3" data-toggle="modal"
+                            data-target="#gantt-chart-model">
                             <i class="fa fa-bar-chart-o" aria-hidden="true"></i>&nbsp;
                             Gantt Chart
+                        </button>
+                        <button type="button" class="btn btn-outline-light mx-3" data-toggle="modal"
+                            data-target="#waiting-time-chart-model">
+                            <i class="fa fa-time" aria-hidden="true"></i>&nbsp;
+                            Waiting Times Chart
                         </button>
                     </div>
                     <div class="text-right mt-4" style="font-size: 18px" id="mouse-text">
@@ -152,9 +157,8 @@
         </div>
     </div>
 
-
     <!-- Modal -->
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="gantt-chart-model" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -164,7 +168,25 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div id="chartdiv" style="width: 90%; height: 400px;"></div>
+                    <div id="chartdiv-gantt" style="width: 90%; height: 400px;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bd-example-modal-lg" id="waiting-time-chart-model" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><strong>Waiting Times</strong></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="chartdiv-waiting-time" style="width: 90%; height: 400px;"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -183,6 +205,7 @@
 
     <script src="https://www.amcharts.com/lib/4/core.js"></script>
     <script src="https://www.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://www.amcharts.com/lib/4/themes/material.js"></script>
     <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
 
     <script src="js/table.js"></script>

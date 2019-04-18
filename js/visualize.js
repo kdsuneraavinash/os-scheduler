@@ -18,8 +18,8 @@ function drawingInit() {
     draw(scheduler);
 }
 
-async function draw(scheduler){
-    while (true){
+async function draw(scheduler) {
+    while (true) {
         let v = loop(scheduler);
         await timeout(TIME_DELAY);
         if (!v) break;
@@ -39,11 +39,13 @@ async function draw(scheduler){
             data.push(datum);
         }
     }
+
+    // initWaitingTime();
     initChart(data);
     $("#chart-button").show();
 }
 
-function loop(scheduler)  {
+function loop(scheduler) {
     let v = scheduler.schedule();
     /**
      * 0 = No Processes left
@@ -52,21 +54,24 @@ function loop(scheduler)  {
      * 3 = No process available (Just Started)
      */
 
-    if (v === 0){
-        return false; // No Processes Left
-    }
-    if (v === 1 || v === 3) currentTime++; // Increase time and continue
     $("#current-time").text(currentTime);
-
-
-    if (v === 1 || v === 2){
+    if (v === NO_PROCESSES_LEFT) {
+        $("#scheduler-message").text("Simulation Ended");
+        return false; // No Processes Left
+    }else if (v === NO_PROCESS_SCHEDULED){
+        $("#scheduler-message").text("Simulating...");
+        $("#current-process").text("No Process");
+        let progress = $("#current-process-progress");
+        progress.text('No Scheduled Process');
+        progress.css('width', '0%');
+    } else if (scheduler.currentProcess) {
         $("#current-process").text(scheduler.currentProcess.processName);
         let progress = $("#current-process-progress");
         let currentProcessObj = scheduler.currentProcess;
         progress.text('Burst ' + (currentProcessObj.burstTime - currentProcessObj.remainingTime) + '/'
             + currentProcessObj.burstTime);
         progress.css('background-color', currentProcessObj.color.replace('0x', '#'));
-        progress.css('width', (100*(1 -currentProcessObj.remainingTime/ currentProcessObj.burstTime)) + '%');
+        progress.css('width', (100 * (1 - currentProcessObj.remainingTime / currentProcessObj.burstTime)) + '%');
     }
 
     return true;
