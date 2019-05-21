@@ -1,5 +1,21 @@
-# OS Scheduler – Report
+# OS Scheduler
 By K. D. Sunera Avinash Chandrasiri (170081L)
+
+![Desktop App](readme.gif)
+
+## How to run
+
+To run the web implementation either open index.html in browser or visit  [**https://kdsuneraavinash.github.io/os-scheduler**](https://kdsuneraavinash.github.io/os-scheduler/).
+
+To run desktop implementation run these commands (You must have npm installed).
+```bash
+npm install && npm start
+```
+or if packages are already installed (in linux),
+```bash
+bash scheduler.bash
+```
+
 
 ## Selected Scheduling Algorithm
 My selected scheduling algorithm is Shortest Remaining Time First (SRTF) which is the preemptive version of Shortest Job First. In this algorithm, the process with the smallest time remaining until completion gets executed first. If a process is running under this scheduling algorithm, it is the algorithm with the shortest remaining time and thus it will continue to execute since its remaining time is getting reduced. However if a new process with a shorter time span arrives, the current process will get preempted and the new process will continue to get executed.
@@ -20,8 +36,8 @@ I have decided to use a JavaScript based web application to demonstrate the sche
 | [**Bootstrap 4.0**](https://getbootstrap.com/) | Make the web app responsive and build components easily and faster |
 | [**Bootstrap Color Picker**](https://github.com/farbelous/bootstrap-colorpicker) | Let the user select colors to represent processes |
 | [**Font Awesome**](https://fontawesome.com/) | Add icons to the UI |
+| [**Electron**](https://electronjs.org/) | Integrate electron to use as a desktop app |
 
-  **Also I hope to bundle website as a desktop app using** [**Electron**](https://electronjs.org/)**.**
 
 ## Implementation (Use Cases &amp; UI)
 My plan for implementation is as follows.
@@ -33,7 +49,4 @@ My plan for implementation is as follows.
 - At the end of simulation the user can view the gantt chart using ![](data:image/*;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAAA0CAIAAADE7AeFAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAOwwAADsMBx2+oZAAACvdJREFUeF7tXHlUVNcZZ2AcZlhmGMBhX2VToxGFQbQmKtj2tFFBE9Fol5O6xub0j5zUNvV40pz05DTHo6HWpnWNTXrS5FhjYl3qkhhbFzZBUwUqCrLJIiDLrCzT33t3eL5583gM4DxNeHc48Oa9e+/33W+73/2+jydLnDzNY1TN09NT7e+vCcBHo9VqVUqlfAL9kcsnTBi8ksu9vLzQk2n4JpNR38gF9Yw8p2/iGp9RofONHHTq9JkzZ88xqMuEmaFQKMLDw0B0qvn5+flTH7XaX6PR4KZMJvtG0uCJQbq/v+83297o7e0jGHGZAfrGxEQnJyVFhIehBWq1fX197R0dnZ2dVqvVYrEOfqweNhtnUf0DA+jcS5r9ivo6QLV+PLUN2PCbfCW/Br/a79L9+p8YWrkdkc2bNly6fKW07BoPM559Zt6irIVd3d01NTV19Q2N9+61t7d3d/e4HanxCmBRdlZgoPbjTw4TAniy6bDkuR+qVKp3tu/45PCRy1cK7t6tlTjhVjlpaWmJCA9nQDgww62ApcmdKdB6/35oiI7Zeh2YYXPaBiQKupUCXV3dXl7y0NAQHjNFmCH5SG5lAHvynp4em4dNN1HHy4wB0fCQABEKQDkCAjS8zKC9Xen0IKKkQDm0AQE8zMBBQEQ0JFAUBcxmM79meNDHOEkzxBQTMAPBpCE3cDFRkWCZzGaEmYZkBuJ1Eo1EowA0w9/Pl4cZiCfhrsQM0TgBQIj44aiBgCxFeTbgvn6KGcPuGcHBQd//3nfFxPhbDMtq7cXqfH0p5XBkRh8VMUV+QXjxGrVGnz7LFQIhADx3Tua0p6a60pnIQVJiYnrarPj4OCRCXBw1xm4REeFps2ZOTklRKpVkKqQLRIOOqDYg+jkzA+F1iiLDMYN38UhwpCQnTYqPZz99auqUZTlL531nriv08vb2/vnLG3NzFoeGhGRm6H/12qv69DRXBjJ9YGDBfvYQkvgSmCQ3Z8mGdWujo6KmTEn5xSubl+UuRecF85/BWkYEmuk8LETOtDBTQpoxuj0jJTl53c9eWv1i3ujWgFHZWQsQj9m+I//Y8RN/++jj/D/urrp9Z0Sz+fioFs5/lj0kJiYGAjHUJKB46owZO9/9w5Gjn/3jyNHtO94tKChCZyQr0UYEmuksDNF5zkFm+OARx0w9zg08dcbTZ899ySSXenoMyKYw2MfHxc3O0Ot09jAOY1LYy4NucSTJ21shIFvgREFhUceDB2QSgG5obKSYASPFZyRhvlKB5fRpzFOFYgKHvsIQnZlhsVhwkyzHgf+D3tRYk6m/f/stuZf80Acfui5cwUFB2gBtdU0N75BVeSsg9Q86Oxc/94O9+w/W1Nxds3pVXW1dZmaG0lsJTbp46TKMYcKk+KioyNWr8ixW67kvzkNLsB9QmeOwMJPJdPTzY5zJExMnQSF4IUZFRmbo9WFhIdXVNYePfIq8Tmho6E9+tPrWraro6EjsavsOvI+BG9evO//VBYAG6U6c+pc+LU0YojMsInwQI37NeCwlAYGBgQajkYiJc/v0s8/3HzwEwl28eDlrwXwKe4UCu33+rj99+dUF5MRQAdHW1g4ZR2L4VtXtq1fLDAbDvaYmo8mEhHFFZWXJ1VKOlwiNgSfSxlI+Bi6C13p9WmlZ2Z69B2CvVq54AY9aW1t30Abtz3v2JyYkREZE4CbYnKFPP3nqdGFxCdAQhsi7tD7aaeJhBtnZUbjhukQ/vyx3/dqXnp4+3fUhvD0h+L291FbG23AywrKxuyYnJ8XGxqAPDMWNm+UdHR1nz32BryG6kJvl5de//i80oLCo+E51NWwx0su1tbVNTc1IMtfV13OyNchpYiDxLDkNPUtLr10pKKxvaDh95mxiYgI4BxFGih7O4YoXluMCaKAIBmhAUwGutLTsvb/sFYY4BDOorQHGjasZZDOBxXSdsnFxsaheCAoKdH0Ib08sz1tBqSppCGTClcrOWgi/AF/hHG/csLa9vaO4uMRH5TNY+EOZU9DoflubVhtABjpvvF5y/uWAbQiMktMWlxkeNmaUyWyBqaDrj+SbNqybOmVyUVExMnTYPyBA7NAqlkDmGQoiPzNoD1bpbKag4yOda4w8YIbDKENUibZSTSYLCdHNmzsnJjrK18cHwrh330FYZ9gBCkOq5grN7n3AuBExR7EJpJWNEqRZ4XiHeQrawbJFRjxMQTOPoBmo4yJfUa5CLhZlZ8P07dl3oLyiEhAhECoV5QJxmgBEXlr1EzNFb+AO3hTKcOiljkAzHhUzQGVIGXM8hP059s8TEHnMn5KSDFMDO0PxyNMTlEIhEM2Lh44GEfAeQw9qutgogXxqjT1144wqzFp6Gt9RxoaYkH1y4tSgwYv6938ukmsAhxVRqZTO0QphiM44oKYJN4nEODADRVG4NSIzhT0TJIPKw6zjApYEM7S1teEa6BoMRlx0dnYNyzMMr6iohF3yo6NmIO7SJYtjY6jtAdSH5wdDgW0je+ECIjFUDeJgEow5FgA6lAPeJyVrtJI1NDTGx8VODA5GZ2c3tLCwKC4uJnN2BkEPUgjbiFObhwzktlOGhIgIGjBNmAT6ipIOKIePSsUoELNAYYjOdCAHbVhB6jf7MTxCGqcRnHf27T/IzHDt+tfk+p3tO8lFReX/YFuG5QTpANfzlc2bfr3lNfgtSAuDzSjcwn3IL+j19ltvmi3mkpJSnW4iIRwoRgYajUYSwoHlOX/hwppVK/OeX44Tw67d70GfamvrtvzyVfgmly5dgRPMRgaCAv1bviwHGmm2WJISEgZstvfbPkBeh+E0PCt6M7AdP3HyxZV5gFteUdHS2gpRsxJ/x9OT2S3wVRiiMykgPTQzKGvkUFE4J3P28tycA4f+euPGTQEKIubx8sb1LpKY3W3L61sZrecdju1hZuoMtUbd3Nxy7fr1mampoGl9fQM6q9Xq7u5uiCfOfSg34pCAPRt6glBQNXITZNWo1Qajgami5IBGNAyxKZDj9p3q4pKrQ7nXGAW1wPkJ7jK0B6YAPXGB0w9nwmEhsvsDt21bX4fbtjN/lwMzZs1MBfM//OjvcNQEaA2/Ah76KJhB9gCpsSmAzNJvt21tbmmGOXHYM4xGE/qhjlyYXhAxkHUUPxIbeMwU7RCTrcGRGSYjxYwhfEGJlO6gANlvYGycmGGQmOEOggvNibp7PCZnVY6Zopjh7AKKjeB4god/lCBehrOZovcMyUyJKA0kYkbOK9zCZ5PZxI4RiYjVOAXFrm/mprtxZubN24xTUom1bBLa4TID0X+l8mH0VCxkxi+cIc0USII4kre3vUhi/FJI9JUPoRldkmaIygqhPQOaIe0ZonKDBsbjTdFmqtPXlydnIj5+4xAidwNHQlGlVD2W/NI4pD5nyVxmtLS0ogfJ8EhNZApwmYH8PtJ1an+1yHhI4HjOGbiFxA7qzCXqiE8BnoJzJDt1E6nUptTcQQE4q6jYi4yMQN070sk//fEapISPnzwFWDxv1UEpFIrj8nftdgcqT/6cVNkJ/QYm8vIl8oamwRc12f+SP7yll7iLago01Dwi/o26CF8fX7yECFX6+IH9J7W/qENovNeE/PytqirU/pBsNP8rjn735hvSaWPscoO3BqF8Gw3/X4z/9+7ssjdUscD8sMsYCCx+ZkB9ULc5dmy+TTOAstSbm+gPeYkT+YPaFFQJI2NN/zUh0oqGCi6wgSmKcJEOw7z8y8VZpG6PhALSP7Y+EjI+mkn+DyofInmaqQvlAAAAAElFTkSuQmCC) button.
 
 ## Current Progress
-**Currently I have finished implementing all the algorithms mentioned above and the completely working UI. A working version can be found** [**here**](https://kdsuneraavinash.github.io/os-scheduler/) **.** I plan on,
-- Adding more algorithms
-- Enabling user to view information such as waiting times, turnaround times in graph form.
-  |
+**A working version can be found** [**here**](https://kdsuneraavinash.github.io/os-scheduler/) **.**
