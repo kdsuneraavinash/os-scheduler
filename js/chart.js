@@ -42,10 +42,10 @@ function initChart(chartData) {
     chart.scrollbarX = new am4core.Scrollbar();
 }
 
-function initWaitingTime(chartData) {
+function initTimeChart(chartData, div) {
     am4core.useTheme(am4themes_material);
     am4core.useTheme(am4themes_animated);
-    var chart = am4core.create("chartdiv-waiting-time", am4charts.PieChart3D);
+    var chart = am4core.create(div, am4charts.PieChart3D);
     chart.hiddenState.properties.opacity = 0;
     chart.paddingTop = 30;
     

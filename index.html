@@ -12,7 +12,8 @@
     <link rel="stylesheet" href="node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css">
     <link rel="stylesheet" href="node_modules/tabulator-tables/dist/css/tabulator.min.css">
     <link rel="stylesheet" href="node_modules/tabulator-tables/dist/css/bootstrap/tabulator_bootstrap4.min.css">
-    <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" media="screen" href="css/app.css">
 </head>
 
@@ -92,16 +93,21 @@
                     <div class="text-center mb-3" style="font-size: 20px" id="scheduler-message">
                         Initializing
                     </div>
-                    <div class="text-center" style="display: none;"  id="chart-button">
+                    <div class="text-center" style="display: none;" id="chart-button">
                         <button type="button" class="btn btn-outline-light mx-3" data-toggle="modal"
                             data-target="#gantt-chart-model">
-                            <i class="fa fa-bar-chart-o" aria-hidden="true"></i>&nbsp;
+                            <i class="fa fa-chart-bar" aria-hidden="true"></i>&nbsp;
                             Gantt Chart
                         </button>
                         <button type="button" class="btn btn-outline-light mx-3" data-toggle="modal"
                             data-target="#waiting-time-chart-model">
-                            <i class="fa fa-time" aria-hidden="true"></i>&nbsp;
+                            <i class="fa fa-chart-pie" aria-hidden="true"></i>&nbsp;
                             Waiting Times Chart
+                        </button>
+                        <button type="button" class="btn btn-outline-light mx-3" data-toggle="modal"
+                            data-target="#turnaround-time-chart-model">
+                            <i class="fa fa-chart-pie" aria-hidden="true"></i>&nbsp;
+                            Turnaround Times Chart
                         </button>
                     </div>
                     <div class="text-right mt-4" style="font-size: 18px" id="mouse-text">
@@ -120,7 +126,7 @@
             <div class="row">
                 <div class="col-4 text-left">
                     <button type="button" id="delete-button" class="btn btn-outline-warning">
-                        <i class="fa fa-scissors" aria-hidden="true"></i>&nbsp;
+                        <i class="fa fa-cut" aria-hidden="true"></i>&nbsp;
                         Delete Selected
                     </button>
                     <p class="py-2" id="select-stats"></p>
@@ -150,7 +156,7 @@
                         id="play-text">Play</span></button>
                 <button type="button" id="reload" class="btn btn-outline-warning mx-3"
                     onclick="window.location.reload(false);">
-                    <i class="fa fa-refresh" aria-hidden="true"></i>&nbsp;
+                    <i class="fa fa-sync-alt" aria-hidden="true"></i>&nbsp;
                     Refresh
                 </button>
             </div>
@@ -176,7 +182,8 @@
             </div>
         </div>
     </div>
-    <div class="modal fade bd-example-modal-lg" id="waiting-time-chart-model" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="waiting-time-chart-model" tabindex="-1" role="dialog"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -187,6 +194,25 @@
                 </div>
                 <div class="modal-body">
                     <div id="chartdiv-waiting-time" style="width: 90%; height: 400px;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bd-example-modal-lg" id="turnaround-time-chart-model" tabindex="-1" role="dialog"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><strong>Turnaround Times</strong></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="chartdiv-turnaround-time" style="width: 90%; height: 400px;"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

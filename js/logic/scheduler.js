@@ -60,17 +60,30 @@ class Scheduler {
     }
 
     endScheduling(){
-        let data = []
+        let waitiongTimeData = []
+        let turnAroundTimeData = []
         this.processes.forEach(element => {
             element.computeEnd();
-            let datum = {
+            let waitingTime = element.getWaitingTime();
+            let turnAroundTime = element.burstTime + waitingTime;
+            let color = element.color.replace('0x', '#');
+
+            let waitiongTimeDatum = {
                 'process': element.processName,
-                'time': element.getWaitingTime(),
-                'color': element.color.replace('0x', '#')
+                'time': waitingTime,
+                'color': color
             }
-            data.push(datum);
+            waitiongTimeData.push(waitiongTimeDatum);
+
+            let turnAroundTimeDatum = {
+                'process': element.processName,
+                'time': turnAroundTime,
+                'color': color
+            }
+            turnAroundTimeData.push(turnAroundTimeDatum);
         });
-        initWaitingTime(data);
+        initTimeChart(waitiongTimeData, "chartdiv-waiting-time");
+        initTimeChart(turnAroundTimeData, "chartdiv-turnaround-time");
     }
 
     static areProcessesExpired(scheduler) {

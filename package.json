@@ -10,7 +10,6 @@
   "dependencies": {
     "bootstrap": "4.3.1",
     "bootstrap-colorpicker": "^3.0.3",
-    "font-awesome": "^4.7.0",
     "jquery": "1.9",
     "pixi.js": "^5.0.0-rc.2",
     "popper.js": "^1.14",
