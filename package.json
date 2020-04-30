@@ -16,7 +16,7 @@
   "dependencies": {
     "bootstrap": "4.3.1",
     "bootstrap-colorpicker": "^3.0.3",
-    "jquery": "3.4",
+    "jquery": "3.5",
     "pixi.js": "^5.0.0-rc.2",
     "popper.js": "^1.14",
     "tabulator-tables": "^4.2.3"
